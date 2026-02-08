@@ -1,0 +1,128 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "dotNetLedger.Ethereum/0.1.0-dev": {
+        "dependencies": {
+          "Nethereum.JsonRpc.RpcClient": "5.8.0",
+          "Newtonsoft.Json": "13.0.4",
+          "dotNetLedger": "0.1.0-dev"
+        },
+        "runtime": {
+          "dotNetLedger.Ethereum.dll": {}
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/6.0.0": {
+        "runtime": {
+          "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52210"
+          }
+        }
+      },
+      "Nethereum.Hex/5.8.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.4"
+        },
+        "runtime": {
+          "lib/net9.0/Nethereum.Hex.dll": {
+            "assemblyVersion": "5.8.0.0",
+            "fileVersion": "5.8.0.0"
+          }
+        }
+      },
+      "Nethereum.JsonRpc.Client/5.8.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "6.0.0",
+          "Nethereum.Hex": "5.8.0",
+          "Newtonsoft.Json": "13.0.4"
+        },
+        "runtime": {
+          "lib/net9.0/Nethereum.JsonRpc.Client.dll": {
+            "assemblyVersion": "5.8.0.0",
+            "fileVersion": "5.8.0.0"
+          }
+        }
+      },
+      "Nethereum.JsonRpc.RpcClient/5.8.0": {
+        "dependencies": {
+          "Nethereum.JsonRpc.Client": "5.8.0",
+          "Newtonsoft.Json": "13.0.4"
+        },
+        "runtime": {
+          "lib/net9.0/Nethereum.JsonRpc.RpcClient.dll": {
+            "assemblyVersion": "5.8.0.0",
+            "fileVersion": "5.8.0.0"
+          }
+        }
+      },
+      "Newtonsoft.Json/13.0.4": {
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.4.30916"
+          }
+        }
+      },
+      "dotNetLedger/0.1.0-dev": {
+        "runtime": {
+          "dotNetLedger.dll": {
+            "assemblyVersion": "0.1.0.0",
+            "fileVersion": "0.1.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "dotNetLedger.Ethereum/0.1.0-dev": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Extensions.Logging.Abstractions/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/HggWBbTwy8TgebGSX5DBZ24ndhzi93sHUBDvP1IxbZD7FDokYzdAr6+vbWGjw2XAfR2EJ1sfKUotpjHnFWPxA==",
+      "path": "microsoft.extensions.logging.abstractions/6.0.0",
+      "hashPath": "microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512"
+    },
+    "Nethereum.Hex/5.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-J0PnMx2/Ck1rw13xSJ7L8v7vEBNLcMKA8AjqA4y8Nqkqp/Przkvi0Um8DHViwqj+TI/gZV8L35kb6nFi/VjdgQ==",
+      "path": "nethereum.hex/5.8.0",
+      "hashPath": "nethereum.hex.5.8.0.nupkg.sha512"
+    },
+    "Nethereum.JsonRpc.Client/5.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-o3JHq9qoTWcylJz1FTJ1VZpKrEd2HvUF21+RpgvuxHYXmxKCZbP106cGVVabwbDziOKTlZ741m4pDovxUQSpmQ==",
+      "path": "nethereum.jsonrpc.client/5.8.0",
+      "hashPath": "nethereum.jsonrpc.client.5.8.0.nupkg.sha512"
+    },
+    "Nethereum.JsonRpc.RpcClient/5.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1jpONR3IynLYM0ctLCvJ0nZ6eQuhrUXu9Ho1dvEjw/I4m/n9LVNphayDQrxqoPBz7ko6akZDzRcX9A43FIVu1A==",
+      "path": "nethereum.jsonrpc.rpcclient/5.8.0",
+      "hashPath": "nethereum.jsonrpc.rpcclient.5.8.0.nupkg.sha512"
+    },
+    "Newtonsoft.Json/13.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pdgNNMai3zv51W5aq268sujXUyx7SNdE2bj1wZcWjAQrKMFZV260lbqYop1d2GM67JI1huLRwxo9ZqnfF/lC6A==",
+      "path": "newtonsoft.json/13.0.4",
+      "hashPath": "newtonsoft.json.13.0.4.nupkg.sha512"
+    },
+    "dotNetLedger/0.1.0-dev": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

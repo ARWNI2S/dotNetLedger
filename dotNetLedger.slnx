@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/build/">
+    <File Path="build.cmd" />
+    <File Path="build.ps1" />
+    <File Path="common.ps1" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="global.json" />
+  </Folder>
+  <Project Path="src/dotNetLedger.Ethereum/dotNetLedger.Ethereum.csproj" />
+  <Project Path="src/dotNetLedger.Solana/dotNetLedger.Solana.csproj" />
+  <Project Path="src/dotNetLedger/dotNetLedger.csproj" />
+</Solution>

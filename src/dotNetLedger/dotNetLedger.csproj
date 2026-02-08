@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="FinalityTarget.cs" />
+    <Compile Remove="ILedgerExecutor.cs" />
+    <Compile Remove="ILedgerOperation.cs" />
+    <Compile Remove="ILedgerRpcAdapter.cs" />
+    <Compile Remove="ILedgerRpcClient.cs" />
+    <Compile Remove="LedgerAdapter.cs" />
+    <Compile Remove="LedgerBlockId.cs" />
+    <Compile Remove="LedgerErrorCategory.cs" />
+    <Compile Remove="LedgerValue.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Rpc\ILedgerRpcAdapter.cs" />
+  </ItemGroup>
+
+</Project>
