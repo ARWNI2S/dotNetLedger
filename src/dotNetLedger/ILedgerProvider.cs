@@ -4,6 +4,6 @@ namespace dotNetLedger
 {
     public interface ILedgerProvider
     {
-        ILedgerAdapter LedgerAdapter { get; }
+        ILedgerCommonAdapter LedgerAdapter { get; }
     }
 }

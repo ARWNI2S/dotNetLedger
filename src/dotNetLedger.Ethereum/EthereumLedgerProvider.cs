@@ -7,7 +7,7 @@ namespace dotNetLedger.Ethereum
     {
         public EthereumAdapter LedgerAdapter { get; } = default!;
 
-        ILedgerAdapter ILedgerProvider.LedgerAdapter => LedgerAdapter;
+        ILedgerCommonAdapter ILedgerProvider.LedgerAdapter => LedgerAdapter;
 
         internal EthereumLedgerProvider()
         {

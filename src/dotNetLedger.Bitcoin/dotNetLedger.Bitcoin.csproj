@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Commons\Class1.cs" />
-    <Compile Remove="Commons\Class2.cs" />
+    <Compile Remove="Commons\IBlockRepository.cs" />
+    <Compile Remove="Commons\RPCClient.cs" />
   </ItemGroup>
 
   <ItemGroup>

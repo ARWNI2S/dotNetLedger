@@ -7,6 +7,6 @@ namespace dotNetLedger.Database
     {
         public DatabaseLedgerAdapter LedgerAdapter { get; } = default!;
 
-        ILedgerAdapter ILedgerProvider.LedgerAdapter => LedgerAdapter;
+        ILedgerCommonAdapter ILedgerProvider.LedgerAdapter => LedgerAdapter;
     }
 }

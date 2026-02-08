@@ -7,7 +7,7 @@ namespace dotNetLedger.Bitcoin
     {
         public BitcoinAdapter LedgerAdapter { get; } = default!;
 
-        ILedgerAdapter ILedgerProvider.LedgerAdapter => LedgerAdapter;
+        ILedgerCommonAdapter ILedgerProvider.LedgerAdapter => LedgerAdapter;
 
         internal BitcoinLedgerProvider()
         {
