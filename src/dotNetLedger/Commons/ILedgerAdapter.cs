@@ -1,4 +1,4 @@
-﻿namespace dotNetLedger.Rpc
+﻿namespace dotNetLedger.Commons
 {
     public interface ILedgerAdapter
     {

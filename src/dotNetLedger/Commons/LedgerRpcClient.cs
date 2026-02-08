@@ -1,6 +1,6 @@
 ﻿using dotNetLedger.Configuration;
 
-namespace dotNetLedger.Rpc
+namespace dotNetLedger.Commons
 {
     public abstract class LedgerRpcClient
     {
