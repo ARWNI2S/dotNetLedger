@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="SolanaNetwork.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="NBitcoin" />
   </ItemGroup>
   

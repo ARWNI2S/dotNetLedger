@@ -5,7 +5,7 @@
 . ./common.ps1
 
 $scriptDir = Split-Path $script:MyInvocation.MyCommand.Path
-$solution = Join-Path $scriptDir "dotNetLedger.sln"
+$solution = Join-Path $scriptDir "dotNetLedger.slnx"
 
 # Define build flags & config
 if ($null -eq $env:BUILD_FLAGS)
@@ -14,7 +14,7 @@ if ($null -eq $env:BUILD_FLAGS)
 }
 if ($null -eq $env:BuildConfiguration)
 {
-    $env:BuildConfiguration = "Debug"
+    $env:BuildConfiguration = "Release"
 }
 
 # Clear the 'Platform' env variable for this session, as it's a per-project setting within the build, and

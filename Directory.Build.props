@@ -50,8 +50,8 @@
 
   <!-- Versioning properties -->
   <PropertyGroup>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <VersionPrefix Condition=" '$(VersionPrefix)'=='' ">0.1.0</VersionPrefix>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <VersionPrefix Condition=" '$(VersionPrefix)'=='' ">1.0.0</VersionPrefix>
   </PropertyGroup>
 
   <!-- For Debug builds generated a date/time dependent version suffix -->
@@ -67,7 +67,7 @@
 
   <!-- Set output folder for distributed test apps -->
   <PropertyGroup>
-    <DistributedTestsOutputPath Condition=" '$(DistributedODistributedTestsOutputPathutputPath)'=='' ">$(SourceRoot)../Artifacts/DistributedTests</DistributedTestsOutputPath>
+    <DistributedTestsOutputPath Condition=" '$(DistributedODistributedTestsOutputPathutputPath)'=='' ">$(SourceRoot)Artifacts/DistributedTests</DistributedTestsOutputPath>
   </PropertyGroup>
 
   <Choose>
