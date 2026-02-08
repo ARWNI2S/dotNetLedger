@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Commons\Class1.cs" />
+    <Compile Remove="Commons\Class2.cs" />
+    <Compile Remove="Commons\Class3.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nethereum.JsonRpc.RpcClient" />
+    <PackageReference Include="Newtonsoft.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\dotNetLedger\dotNetLedger.csproj" />
   </ItemGroup>
 

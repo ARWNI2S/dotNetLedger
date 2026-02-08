@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Commons\Class1.cs" />
+    <Compile Remove="Commons\Class2.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="NBitcoin" />
   </ItemGroup>
   

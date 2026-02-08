@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Commons\Class1.cs" />
+    <Compile Remove="Commons\Class2.cs" />
+    <Compile Remove="Commons\Class3.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Solnet.Rpc" />
   </ItemGroup>
 
