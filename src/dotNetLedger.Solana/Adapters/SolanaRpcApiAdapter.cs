@@ -1,33 +1,27 @@
-﻿using dotNetLedger.Commons;
+﻿using dotNetLedger.Adapters;
+using dotNetLedger.Transactions;
 using Solnet.Rpc;
 using Solnet.Rpc.Types;
 
-namespace dotNetLedger.Solana.Commons
+namespace dotNetLedger.Solana.Adapters
 {
-    public sealed class SolanaAdapter : ILedgerCommonAdapter
+    internal sealed class SolanaRpcApiAdapter(IRpcClient rpc) : RpcApiAdapterBase, ILedgerRpcApiAdapter
     {
-        private readonly IRpcClient _rpc;
-
-        public SolanaAdapter(IRpcClient rpc)
+        public override async Task<LedgerHealth> GetHealthAsync(CancellationToken ct = default)
         {
-            _rpc = rpc;
-        }
-
-        public async Task<LedgerHealth> GetHealthAsync(CancellationToken ct = default)
-        {
-            var r = await _rpc.GetHealthAsync();
+            var r = await rpc.GetHealthAsync();
             return new LedgerHealth(r.WasSuccessful && r.Result == "ok", r.Result);
         }
 
-        public async Task<LedgerNodeVersion> GetVersionAsync(CancellationToken ct = default)
+        public override async Task<LedgerNodeVersion> GetVersionAsync(CancellationToken ct = default)
         {
-            var r = await _rpc.GetVersionAsync();
+            var r = await rpc.GetVersionAsync();
             return new LedgerNodeVersion("solana", r.Result?.SolanaCore, r.RawRpcResponse);
         }
 
-        public async Task<LedgerNetworkInfo> GetNetworkInfoAsync(CancellationToken ct = default)
+        public override async Task<LedgerNetworkInfo> GetNetworkInfoAsync(CancellationToken ct = default)
         {
-            var genesis = await _rpc.GetGenesisHashAsync();
+            var genesis = await rpc.GetGenesisHashAsync();
             return new LedgerNetworkInfo(
                 NetworkName: null,
                 ChainId: null,
@@ -35,20 +29,20 @@ namespace dotNetLedger.Solana.Commons
                 Raw: genesis.RawRpcResponse);
         }
 
-        public async Task<LedgerSyncStatus> GetSyncStatusAsync(CancellationToken ct = default)
+        public override async Task<LedgerSyncStatus> GetSyncStatusAsync(CancellationToken ct = default)
         {
             // Solana no expone “syncing” explícito → health + slot progression
-            var health = await _rpc.GetHealthAsync();
+            var health = await rpc.GetHealthAsync();
             return new LedgerSyncStatus(
                 IsSynced: health.Result == "ok",
                 Raw: health.RawRpcResponse);
         }
 
-        public async Task<LedgerHead> GetHeadAsync(CancellationToken ct = default)
+        public override async Task<LedgerHead> GetHeadAsync(CancellationToken ct = default)
         {
-            var slot = await _rpc.GetSlotAsync();
-            var height = await _rpc.GetBlockHeightAsync();
-            var hash = await _rpc.GetLatestBlockHashAsync();
+            var slot = await rpc.GetSlotAsync();
+            var height = await rpc.GetBlockHeightAsync();
+            var hash = await rpc.GetLatestBlockHashAsync();
 
             return new LedgerHead(
                 HeightLike: (long)height.Result,
@@ -57,12 +51,12 @@ namespace dotNetLedger.Solana.Commons
                 Raw: hash.RawRpcResponse);
         }
 
-        public async Task<LedgerBlock?> GetBlockAsync(LedgerBlockId id, LedgerBlockReadOptions? options = null, CancellationToken ct = default)
+        public override async Task<LedgerBlock?> GetBlockAsync(LedgerBlockId id, LedgerBlockReadOptions? options = null, CancellationToken ct = default)
         {
             if (id is not LedgerBlockId.BySlot bySlot)
                 return null;
 
-            var r = await _rpc.GetBlockAsync((ulong)bySlot.Slot);
+            var r = await rpc.GetBlockAsync((ulong)bySlot.Slot);
             if (!r.WasSuccessful || r.Result == null) return null;
 
             return new LedgerBlock(
@@ -74,9 +68,9 @@ namespace dotNetLedger.Solana.Commons
                 Raw: r.RawRpcResponse);
         }
 
-        public async Task<LedgerTransaction?> GetTransactionAsync(LedgerTxId id, LedgerTxReadOptions? options = null, CancellationToken ct = default)
+        public override async Task<LedgerTransaction?> GetTransactionAsync(LedgerTxId id, LedgerTxReadOptions? options = null, CancellationToken ct = default)
         {
-            var r = await _rpc.GetTransactionAsync(id.Value);
+            var r = await rpc.GetTransactionAsync(id.Value);
             if (!r.WasSuccessful || r.Result == null) return null;
 
             return new LedgerTransaction(
@@ -84,9 +78,9 @@ namespace dotNetLedger.Solana.Commons
                 Raw: r.RawRpcResponse);
         }
 
-        public async Task<LedgerTxStatus> GetTransactionStatusAsync(LedgerTxId id, CancellationToken ct = default)
+        public override async Task<LedgerTxStatus> GetTransactionStatusAsync(LedgerTxId id, CancellationToken ct = default)
         {
-            var r = await _rpc.GetSignatureStatusesAsync(new() { id.Value }, true);
+            var r = await rpc.GetSignatureStatusesAsync(new() { id.Value }, true);
             var s = r.Result?.Value?[0];
 
             return new LedgerTxStatus(
@@ -96,13 +90,16 @@ namespace dotNetLedger.Solana.Commons
                 Raw: r.RawRpcResponse);
         }
 
-        public async Task<LedgerBroadcastResult> BroadcastSignedTransactionAsync(
-            ReadOnlyMemory<byte> signedTransaction,
+        public override async Task<LedgerBroadcastResult> BroadcastSignedTransactionAsync(
+            TransactionBase signedTransaction,
             LedgerBroadcastOptions? options = null,
             CancellationToken ct = default)
         {
-            var r = await _rpc.SendTransactionAsync(
-                Convert.ToBase64String(signedTransaction.Span),
+            if (!signedTransaction.CheckSigned())
+                throw new InvalidOperationException("Transaction is not signed");
+
+            var r = await rpc.SendTransactionAsync(
+                Convert.ToBase64String(signedTransaction.GetBytes().Span),
                 skipPreflight: options?.SkipPreflight ?? false,
                 preFlightCommitment: Commitment.Finalized);
 
@@ -113,21 +110,21 @@ namespace dotNetLedger.Solana.Commons
                 Raw: r.RawRpcResponse);
         }
 
-        public async Task<LedgerFeeQuote> EstimateFeesAsync(LedgerFeeRequest request, CancellationToken ct = default)
+        public override async Task<LedgerFeeQuote> EstimateFeesAsync(LedgerFeeRequest request, CancellationToken ct = default)
         {
             if (request.SignedTransaction is null)
                 return new LedgerFeeQuote(null, null);
 
-            var r = await _rpc.GetFeeForMessageAsync(Convert.ToBase64String(request.SignedTransaction.Value.ToArray()));
+            var r = await rpc.GetFeeForMessageAsync(Convert.ToBase64String(request.SignedTransaction.Value.ToArray()));
             return new LedgerFeeQuote("lamports", r.Result.Value, Raw: r.RawRpcResponse);
         }
 
-        public async Task<LedgerPreflightResult> PreflightSignedTransactionAsync(
+        public override async Task<LedgerPreflightResult> PreflightSignedTransactionAsync(
             ReadOnlyMemory<byte> signedTransaction,
             LedgerPreflightOptions? options = null,
             CancellationToken ct = default)
         {
-            var r = await _rpc.SimulateTransactionAsync(signedTransaction.ToArray());
+            var r = await rpc.SimulateTransactionAsync(signedTransaction.ToArray());
             return new LedgerPreflightResult(
                 WouldLikelySucceed: r.WasSuccessful && r.ErrorData == null,
                 Reason: r.ErrorData?.Error?.InstructionError?.BorshIoError,

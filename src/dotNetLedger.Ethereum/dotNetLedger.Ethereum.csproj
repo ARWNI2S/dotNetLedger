@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Commons\ClientBase.cs" />
-    <Compile Remove="Commons\IClient.cs" />
-    <Compile Remove="Commons\RpcClient.cs" />
+    <Compile Remove="Adapters\ClientBase.cs" />
+    <Compile Remove="Adapters\IClient.cs" />
+    <Compile Remove="Adapters\RpcClient.cs" />
   </ItemGroup>
 
   <ItemGroup>

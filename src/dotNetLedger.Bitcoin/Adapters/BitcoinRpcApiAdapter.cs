@@ -1,19 +1,21 @@
-﻿using dotNetLedger.Commons;
+﻿using dotNetLedger.Adapters;
+using dotNetLedger.Transactions;
 using NBitcoin;
 using NBitcoin.RPC;
+using BTC = NBitcoin.Transaction;
 
-namespace dotNetLedger.Bitcoin.Commons
+namespace dotNetLedger.Bitcoin.Adapters
 {
-    public sealed class BitcoinAdapter : ILedgerCommonAdapter
+    internal sealed class BitcoinRpcApiAdapter : RpcApiAdapterBase, ILedgerRpcApiAdapter
     {
         private readonly RPCClient _rpc;
 
-        public BitcoinAdapter(RPCClient rpc)
+        public BitcoinRpcApiAdapter(RPCClient rpc)
         {
             _rpc = rpc;
         }
 
-        public async Task<LedgerHealth> GetHealthAsync(CancellationToken ct = default)
+        public override async Task<LedgerHealth> GetHealthAsync(CancellationToken ct = default)
         {
             // En Bitcoin no hay "health": liveness = responde
             try
@@ -27,7 +29,7 @@ namespace dotNetLedger.Bitcoin.Commons
             }
         }
 
-        public async Task<LedgerNodeVersion> GetVersionAsync(CancellationToken ct = default)
+        public override async Task<LedgerNodeVersion> GetVersionAsync(CancellationToken ct = default)
         {
             await _rpc.UptimeAsync(ct); // liveness probe
             return new LedgerNodeVersion(
@@ -36,7 +38,7 @@ namespace dotNetLedger.Bitcoin.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerNetworkInfo> GetNetworkInfoAsync(CancellationToken ct = default)
+        public override async Task<LedgerNetworkInfo> GetNetworkInfoAsync(CancellationToken ct = default)
         {
             var info = await _rpc.GetBlockchainInfoAsync(ct);
             return new LedgerNetworkInfo(
@@ -46,7 +48,7 @@ namespace dotNetLedger.Bitcoin.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerSyncStatus> GetSyncStatusAsync(CancellationToken ct = default)
+        public override async Task<LedgerSyncStatus> GetSyncStatusAsync(CancellationToken ct = default)
         {
             var info = await _rpc.GetBlockchainInfoAsync(ct);
             return new LedgerSyncStatus(
@@ -55,7 +57,7 @@ namespace dotNetLedger.Bitcoin.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerHead> GetHeadAsync(CancellationToken ct = default)
+        public override async Task<LedgerHead> GetHeadAsync(CancellationToken ct = default)
         {
             var height = await _rpc.GetBlockCountAsync(ct);
             var hash = await _rpc.GetBestBlockHashAsync(ct);
@@ -67,7 +69,7 @@ namespace dotNetLedger.Bitcoin.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerBlock?> GetBlockAsync(
+        public override async Task<LedgerBlock?> GetBlockAsync(
             LedgerBlockId id,
             LedgerBlockReadOptions? options = null,
             CancellationToken ct = default)
@@ -99,7 +101,7 @@ namespace dotNetLedger.Bitcoin.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerTransaction?> GetTransactionAsync(
+        public override async Task<LedgerTransaction?> GetTransactionAsync(
             LedgerTxId id,
             LedgerTxReadOptions? options = null,
             CancellationToken ct = default)
@@ -111,7 +113,7 @@ namespace dotNetLedger.Bitcoin.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerTxStatus> GetTransactionStatusAsync(LedgerTxId id, CancellationToken ct = default)
+        public override async Task<LedgerTxStatus> GetTransactionStatusAsync(LedgerTxId id, CancellationToken ct = default)
         {
             var info = await _rpc.GetRawTransactionInfoAsync(uint256.Parse(id.Value), ct);
 
@@ -123,12 +125,15 @@ namespace dotNetLedger.Bitcoin.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerBroadcastResult> BroadcastSignedTransactionAsync(
-            ReadOnlyMemory<byte> signedTransaction,
+        public override async Task<LedgerBroadcastResult> BroadcastSignedTransactionAsync(
+            TransactionBase signedTransaction,
             LedgerBroadcastOptions? options = null,
             CancellationToken ct = default)
         {
-            var tx = Transaction.Load(signedTransaction.Span.ToArray(), _rpc.Network);
+            if (!signedTransaction.CheckSigned())
+                throw new InvalidOperationException("Transaction is not signed");
+
+            var tx = BTC.Load(signedTransaction.GetBytes().Span.ToArray(), _rpc.Network);
             var txid = await _rpc.SendRawTransactionAsync(tx, ct);
 
             return new LedgerBroadcastResult(
@@ -137,7 +142,7 @@ namespace dotNetLedger.Bitcoin.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerFeeQuote> EstimateFeesAsync(LedgerFeeRequest request, CancellationToken ct = default)
+        public override async Task<LedgerFeeQuote> EstimateFeesAsync(LedgerFeeRequest request, CancellationToken ct = default)
         {
             var target = request.TargetConfirmations ?? 6;
             var fee = await _rpc.EstimateSmartFeeAsync(target, null, ct);
@@ -148,12 +153,12 @@ namespace dotNetLedger.Bitcoin.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerPreflightResult> PreflightSignedTransactionAsync(
+        public override async Task<LedgerPreflightResult> PreflightSignedTransactionAsync(
             ReadOnlyMemory<byte> signedTransaction,
             LedgerPreflightOptions? options = null,
             CancellationToken ct = default)
         {
-            var tx = Transaction.Load(signedTransaction.Span.ToArray(), _rpc.Network);
+            var tx = BTC.Load(signedTransaction.Span.ToArray(), _rpc.Network);
             var result = await _rpc.TestMempoolAcceptAsync(tx, ct);
 
             var accepted = result.IsAllowed;

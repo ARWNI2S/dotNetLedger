@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Commons\LedgerRpcClient.cs" />
+    <Compile Remove="Adapters\LedgerRpcClient.cs" />
     <Compile Remove="FinalityTarget.cs" />
     <Compile Remove="ILedgerExecutor.cs" />
     <Compile Remove="ILedgerOperation.cs" />
@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Commons\ILedgerCommonAdapter.cs" />
+    <None Include="Adapters\ILedgerRpcApiAdapter.cs" />
   </ItemGroup>
 
 </Project>

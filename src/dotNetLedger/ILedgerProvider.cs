@@ -1,9 +1,6 @@
-﻿using dotNetLedger.Commons;
-
-namespace dotNetLedger
+﻿namespace dotNetLedger
 {
     public interface ILedgerProvider
     {
-        ILedgerCommonAdapter LedgerAdapter { get; }
     }
 }

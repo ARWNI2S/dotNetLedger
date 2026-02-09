@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Commons\IBlockRepository.cs" />
-    <Compile Remove="Commons\RPCClient.cs" />
+    <Compile Remove="Adapters\IBlockRepository.cs" />
+    <Compile Remove="Adapters\RPCClient.cs" />
   </ItemGroup>
 
   <ItemGroup>

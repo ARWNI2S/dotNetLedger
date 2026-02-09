@@ -1,11 +1,13 @@
-﻿namespace dotNetLedger.Commons
+﻿using dotNetLedger.Transactions;
+
+namespace dotNetLedger.Adapters
 {
     /// <summary>
     /// Adaptador RPC "mínimo común" entre Bitcoin/Ethereum/Solana.
     /// - No expone conceptos exclusivos (UTXO scan, rent, program accounts, logs, etc.).
     /// - Las diferencias de plataforma se encapsulan en los DTOs y en el adapter concreto.
     /// </summary>
-    public interface ILedgerCommonAdapter
+    public interface ILedgerRpcApiAdapter : ILedgerAdapter
     {
         #region Health / version / network info
 
@@ -109,7 +111,7 @@
         /// <returns>A task that represents the asynchronous operation. The task result contains the outcome of the broadcast,
         /// including success status and any error information.</returns>
         Task<LedgerBroadcastResult> BroadcastSignedTransactionAsync(
-            ReadOnlyMemory<byte> signedTransaction,
+            TransactionBase signedTransaction,
             LedgerBroadcastOptions? options = null,
             CancellationToken ct = default);
 

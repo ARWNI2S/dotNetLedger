@@ -1,4 +1,4 @@
-﻿namespace dotNetLedger.Ethereum.Commons
+﻿namespace dotNetLedger.Ethereum.Adapters
 {
     public enum UnsupportedApiMethods {
         eth_signTransaction,

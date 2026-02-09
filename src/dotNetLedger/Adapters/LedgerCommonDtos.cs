@@ -1,4 +1,4 @@
-﻿namespace dotNetLedger.Commons
+﻿namespace dotNetLedger.Adapters
 {
     /// <summary>
     /// Represents the health status of a ledger, including an optional message describing the condition.

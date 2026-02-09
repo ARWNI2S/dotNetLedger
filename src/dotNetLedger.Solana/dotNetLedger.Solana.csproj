@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Commons\IRpcClient.cs" />
-    <Compile Remove="Commons\JsonRpcClient.cs" />
-    <Compile Remove="Commons\SolanaRpcClient.cs" />
+    <Compile Remove="Adapters\IRpcClient.cs" />
+    <Compile Remove="Adapters\JsonRpcClient.cs" />
+    <Compile Remove="Adapters\SolanaRpcClient.cs" />
   </ItemGroup>
 
   <ItemGroup>

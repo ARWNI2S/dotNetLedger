@@ -1,20 +1,21 @@
-﻿using dotNetLedger.Commons;
+﻿using dotNetLedger.Adapters;
+using dotNetLedger.Transactions;
 using Nethereum.Hex.HexTypes;
 using Nethereum.JsonRpc.Client;
 using Newtonsoft.Json.Linq;
 
-namespace dotNetLedger.Ethereum.Commons
+namespace dotNetLedger.Ethereum.Adapters
 {
-    public sealed class EthereumAdapter : ILedgerCommonAdapter
+    internal sealed class EthereumRpcApiAdapter : RpcApiAdapterBase, ILedgerRpcApiAdapter
     {
         private readonly IClient _client;
 
-        public EthereumAdapter(IClient client)
+        public EthereumRpcApiAdapter(IClient client)
         {
             _client = client;
         }
 
-        public async Task<LedgerHealth> GetHealthAsync(CancellationToken ct = default)
+        public override async Task<LedgerHealth> GetHealthAsync(CancellationToken ct = default)
         {
             try
             {
@@ -27,13 +28,13 @@ namespace dotNetLedger.Ethereum.Commons
             }
         }
 
-        public async Task<LedgerNodeVersion> GetVersionAsync(CancellationToken ct = default)
+        public override async Task<LedgerNodeVersion> GetVersionAsync(CancellationToken ct = default)
         {
             var version = await _client.SendRequestAsync<string>(ApiMethods.web3_clientVersion.ToString());
             return new LedgerNodeVersion("ethereum", version, null);
         }
 
-        public async Task<LedgerNetworkInfo> GetNetworkInfoAsync(CancellationToken ct = default)
+        public override async Task<LedgerNetworkInfo> GetNetworkInfoAsync(CancellationToken ct = default)
         {
             var chainId = await _client.SendRequestAsync<string>(ApiMethods.eth_chainId.ToString());
             return new LedgerNetworkInfo(
@@ -43,7 +44,7 @@ namespace dotNetLedger.Ethereum.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerSyncStatus> GetSyncStatusAsync(CancellationToken ct = default)
+        public override async Task<LedgerSyncStatus> GetSyncStatusAsync(CancellationToken ct = default)
         {
             var syncing = await _client.SendRequestAsync<object>(ApiMethods.eth_syncing.ToString());
 
@@ -52,7 +53,7 @@ namespace dotNetLedger.Ethereum.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerHead> GetHeadAsync(CancellationToken ct = default)
+        public override async Task<LedgerHead> GetHeadAsync(CancellationToken ct = default)
         {
             var blockNumberHex = await _client.SendRequestAsync<string>(ApiMethods.eth_blockNumber.ToString());
             var height = new HexBigInteger(blockNumberHex).Value;
@@ -69,7 +70,7 @@ namespace dotNetLedger.Ethereum.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerBlock?> GetBlockAsync(
+        public override async Task<LedgerBlock?> GetBlockAsync(
             LedgerBlockId id,
             LedgerBlockReadOptions? options = null,
             CancellationToken ct = default)
@@ -107,7 +108,7 @@ namespace dotNetLedger.Ethereum.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerTransaction?> GetTransactionAsync(
+        public override async Task<LedgerTransaction?> GetTransactionAsync(
             LedgerTxId id,
             LedgerTxReadOptions? options = null,
             CancellationToken ct = default)
@@ -121,7 +122,7 @@ namespace dotNetLedger.Ethereum.Commons
             return new LedgerTransaction(id, RawBytes: null, Raw: null);
         }
 
-        public async Task<LedgerTxStatus> GetTransactionStatusAsync(LedgerTxId id, CancellationToken ct = default)
+        public override async Task<LedgerTxStatus> GetTransactionStatusAsync(LedgerTxId id, CancellationToken ct = default)
         {
             var receipt = await _client.SendRequestAsync<JObject>(
                 ApiMethods.eth_getTransactionReceipt.ToString(),
@@ -146,12 +147,15 @@ namespace dotNetLedger.Ethereum.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerBroadcastResult> BroadcastSignedTransactionAsync(
-            ReadOnlyMemory<byte> signedTransaction,
+        public override async Task<LedgerBroadcastResult> BroadcastSignedTransactionAsync(
+            TransactionBase signedTransaction,
             LedgerBroadcastOptions? options = null,
             CancellationToken ct = default)
         {
-            var hex = "0x" + Convert.ToHexString(signedTransaction.Span).ToLowerInvariant();
+            if (!signedTransaction.CheckSigned())
+                throw new InvalidOperationException("Transaction is not signed");
+
+            var hex = "0x" + Convert.ToHexString(signedTransaction.GetBytes().Span).ToLowerInvariant();
 
             var txHash = await _client.SendRequestAsync<string>(
                 ApiMethods.eth_sendRawTransaction.ToString(),
@@ -163,7 +167,7 @@ namespace dotNetLedger.Ethereum.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerFeeQuote> EstimateFeesAsync(LedgerFeeRequest request, CancellationToken ct = default)
+        public override async Task<LedgerFeeQuote> EstimateFeesAsync(LedgerFeeRequest request, CancellationToken ct = default)
         {
             var gasPriceHex = await _client.SendRequestAsync<string>(ApiMethods.eth_gasPrice.ToString());
             var gasPrice = new HexBigInteger(gasPriceHex).Value;
@@ -174,7 +178,7 @@ namespace dotNetLedger.Ethereum.Commons
                 Raw: null);
         }
 
-        public async Task<LedgerPreflightResult> PreflightSignedTransactionAsync(
+        public override async Task<LedgerPreflightResult> PreflightSignedTransactionAsync(
             ReadOnlyMemory<byte> signedTransaction,
             LedgerPreflightOptions? options = null,
             CancellationToken ct = default)
