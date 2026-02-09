@@ -16,6 +16,9 @@
     <Compile Remove="LedgerBlockId.cs" />
     <Compile Remove="LedgerErrorCategory.cs" />
     <Compile Remove="LedgerValue.cs" />
+    <Compile Remove="Transactions\ITransactionStore.cs" />
+    <Compile Remove="Transactions\TransactionFactory.cs" />
+    <Compile Remove="Transactions\TransactionStore.cs" />
   </ItemGroup>
 
   <ItemGroup>

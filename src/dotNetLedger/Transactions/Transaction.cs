@@ -82,6 +82,10 @@
             return hash.ToHashCode();
         }
 
+        public static implicit operator Transaction(TransactionBase tx)
+            => new(tx.Id, tx.From, tx.To, tx.Type);
+        //public static explicit operator Transaction(TransactionBase tx) => tx.Core;
+
         public static bool operator ==(TransactionBase? left, TransactionBase? right)
             => left is null ? right is null : left.Equals(right);
 
