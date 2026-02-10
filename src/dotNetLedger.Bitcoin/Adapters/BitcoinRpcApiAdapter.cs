@@ -33,28 +33,28 @@ namespace dotNetLedger.Bitcoin.Adapters
         {
             await _rpc.UptimeAsync(ct); // liveness probe
             return new LedgerNodeVersion(
-                ClientName: "bitcoind",
-                ClientVersion: null,
-                Raw: null);
+                clientName: "bitcoind",
+                clientVersion: null,
+                raw: null);
         }
 
         public override async Task<LedgerNetworkInfo> GetNetworkInfoAsync(CancellationToken ct = default)
         {
             var info = await _rpc.GetBlockchainInfoAsync(ct);
             return new LedgerNetworkInfo(
-                NetworkName: info.Chain.Name,
-                ChainId: null,
-                GenesisId: info.BestBlockHash?.ToString(),
-                Raw: null);
+                networkName: info.Chain.Name,
+                chainId: null,
+                genesisId: info.BestBlockHash?.ToString(),
+                raw: null);
         }
 
         public override async Task<LedgerSyncStatus> GetSyncStatusAsync(CancellationToken ct = default)
         {
             var info = await _rpc.GetBlockchainInfoAsync(ct);
             return new LedgerSyncStatus(
-                IsSynced: !info.InitialBlockDownload,
-                Progress: info.VerificationProgress,
-                Raw: null);
+                isSynced: !info.InitialBlockDownload,
+                progress: info.VerificationProgress,
+                raw: null);
         }
 
         public override async Task<LedgerHead> GetHeadAsync(CancellationToken ct = default)
@@ -63,10 +63,10 @@ namespace dotNetLedger.Bitcoin.Adapters
             var hash = await _rpc.GetBestBlockHashAsync(ct);
 
             return new LedgerHead(
-                HeightLike: height,
-                SlotLike: null,
-                HeadId: hash.ToString(),
-                Raw: null);
+                heightLike: height,
+                slotLike: null,
+                headId: hash.ToString(),
+                raw: null);
         }
 
         public override async Task<LedgerBlock?> GetBlockAsync(
@@ -93,12 +93,12 @@ namespace dotNetLedger.Bitcoin.Adapters
             }
 
             return new LedgerBlock(
-                CanonicalId: id,
-                Hash: block.GetHash().ToString(),
-                NumberOrHeight: height,
-                Slot: null,
-                Time: block.Header.BlockTime,
-                Raw: null);
+                canonicalId: id,
+                hash: block.GetHash().ToString(),
+                numberOrHeight: height,
+                slot: null,
+                time: block.Header.BlockTime,
+                raw: null);
         }
 
         public override async Task<LedgerTransaction?> GetTransactionAsync(
@@ -109,8 +109,8 @@ namespace dotNetLedger.Bitcoin.Adapters
             var tx = await _rpc.GetRawTransactionAsync(uint256.Parse(id.Value), cancellationToken: ct);
             return new LedgerTransaction(
                 id,
-                RawBytes: tx.ToBytes(),
-                Raw: null);
+                rawBytes: tx.ToBytes(),
+                raw: null);
         }
 
         public override async Task<LedgerTxStatus> GetTransactionStatusAsync(LedgerTxId id, CancellationToken ct = default)
@@ -118,11 +118,11 @@ namespace dotNetLedger.Bitcoin.Adapters
             var info = await _rpc.GetRawTransactionInfoAsync(uint256.Parse(id.Value), ct);
 
             return new LedgerTxStatus(
-                IsKnown: true,
-                IsFinal: info.Confirmations > 0,
-                ConfirmationsLike: info.Confirmations,
-                State: info.Confirmations > 0 ? "confirmed" : "mempool",
-                Raw: null);
+                isKnown: true,
+                isFinal: info.Confirmations > 0,
+                confirmationsLike: info.Confirmations,
+                state: info.Confirmations > 0 ? "confirmed" : "mempool",
+                raw: null);
         }
 
         public override async Task<LedgerBroadcastResult> BroadcastSignedTransactionAsync(
@@ -133,13 +133,13 @@ namespace dotNetLedger.Bitcoin.Adapters
             if (!signedTransaction.CheckSigned())
                 throw new InvalidOperationException("Transaction is not signed");
 
-            var tx = BTC.Load(signedTransaction.GetBytes().Span.ToArray(), _rpc.Network);
+            var tx = BTC.Load(signedTransaction.GetBytes(), _rpc.Network);
             var txid = await _rpc.SendRawTransactionAsync(tx, ct);
 
             return new LedgerBroadcastResult(
-                Accepted: true,
-                TxId: new LedgerTxId(txid.ToString()),
-                Raw: null);
+                accepted: true,
+                txId: new LedgerTxId(txid.ToString()),
+                raw: null);
         }
 
         public override async Task<LedgerFeeQuote> EstimateFeesAsync(LedgerFeeRequest request, CancellationToken ct = default)
@@ -148,25 +148,25 @@ namespace dotNetLedger.Bitcoin.Adapters
             var fee = await _rpc.EstimateSmartFeeAsync(target, null, ct);
 
             return new LedgerFeeQuote(
-                Unit: "sat/vB",
-                Value: fee.FeeRate?.SatoshiPerByte,
-                Raw: null);
+                unit: "sat/vB",
+                value: fee.FeeRate?.SatoshiPerByte,
+                raw: null);
         }
 
         public override async Task<LedgerPreflightResult> PreflightSignedTransactionAsync(
-            ReadOnlyMemory<byte> signedTransaction,
+            byte[] signedTransaction,
             LedgerPreflightOptions? options = null,
             CancellationToken ct = default)
         {
-            var tx = BTC.Load(signedTransaction.Span.ToArray(), _rpc.Network);
+            var tx = BTC.Load(signedTransaction, _rpc.Network);
             var result = await _rpc.TestMempoolAcceptAsync(tx, ct);
 
             var accepted = result.IsAllowed;
 
             return new LedgerPreflightResult(
-                WouldLikelySucceed: accepted,
-                Reason: accepted ? null : result.RejectReason,
-                Raw: null);
+                wouldLikelySucceed: accepted,
+                reason: accepted ? null : result.RejectReason,
+                raw: null);
         }
     }
 

@@ -8,8 +8,9 @@
     <File Path="Directory.Packages.props" />
     <File Path="global.json" />
   </Folder>
+  <Project Path="src/dotNetLedger.Abstractions/dotNetLedger.Abstractions.csproj" Id="e741dfb8-f2b0-4ea6-8960-6ea15aebfa57" />
+  <Project Path="src/dotNetLedger.Analyzers/dotNetLedger.Analyzers.csproj" Id="409f2ceb-6574-4402-a227-6b36b98e918c" />
   <Project Path="src/dotNetLedger.Bitcoin/dotNetLedger.Bitcoin.csproj" />
-  <Project Path="src/dotNetLedger.CodeGen/dotNetLedger.CodeGen.csproj" />
   <Project Path="src/dotNetLedger.Database/dotNetLedger.Database.csproj" />
   <Project Path="src/dotNetLedger.Ethereum/dotNetLedger.Ethereum.csproj" />
   <Project Path="src/dotNetLedger.Solana/dotNetLedger.Solana.csproj" />

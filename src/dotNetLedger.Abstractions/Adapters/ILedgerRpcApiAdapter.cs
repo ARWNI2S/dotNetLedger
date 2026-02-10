@@ -152,7 +152,7 @@ namespace dotNetLedger.Adapters
         /// <returns>A task that represents the asynchronous operation. The task result contains a LedgerPreflightResult
         /// describing whether the transaction would be accepted and any relevant simulation details.</returns>
         Task<LedgerPreflightResult> PreflightSignedTransactionAsync(
-            ReadOnlyMemory<byte> signedTransaction,
+            byte[] signedTransaction,
             LedgerPreflightOptions? options = null,
             CancellationToken ct = default);
 

@@ -1,6 +1,12 @@
 ﻿namespace dotNetLedger.Transactions
 {
-    public readonly record struct Transaction(TxId Id, Address From, Address To, TransactionType Type);
+    public readonly struct Transaction(TxId id, Address from, Address to, TransactionType type)
+    {
+        public TxId Id { get; } = id;
+        public Address From { get; } = from;
+        public Address To { get; } = to;
+        public TransactionType Type { get; } = type;
+    }
 
     public abstract class TransactionBase : IEquatable<TransactionBase>, IEquatable<Transaction>
     {
@@ -28,13 +34,13 @@
         // TODO: Si realmente no hay implementación por defecto, mejor abstract que "throw"?
         public virtual void Execute() => throw new NotImplementedException();
         public virtual bool CheckSigned() => throw new NotImplementedException();
-        public virtual ReadOnlyMemory<byte> TrySignTransaction(out bool isSigned) => throw new NotImplementedException();
+        public virtual byte[] TrySignTransaction(out bool isSigned) => throw new NotImplementedException();
         public virtual void Validate() => throw new NotImplementedException();
 
-        public ReadOnlyMemory<byte> GetBytes()
+        public byte[] GetBytes()
         {
             // TODO: esto debería delegar en un serializer determinista.
-            return ReadOnlyMemory<byte>.Empty;
+            return default!;
         }
 
         // --- Igualdad ---
@@ -66,21 +72,21 @@
              : obj is Transaction t ? Equals(t)
              : false;
 
-        public override int GetHashCode()
-        {
-            var hash = new HashCode();
+        //public override int GetHashCode()
+        //{
+        //    var hash = new HashCode();
 
-            // Opción A: el tipo runtime entra en el hash para evitar colisiones entre derivadas
-            hash.Add(GetType());
-            hash.Add(Id);
-            hash.Add(From);
-            hash.Add(To);
-            hash.Add(Type);
+        //    // Opción A: el tipo runtime entra en el hash para evitar colisiones entre derivadas
+        //    hash.Add(GetType());
+        //    hash.Add(Id);
+        //    hash.Add(From);
+        //    hash.Add(To);
+        //    hash.Add(Type);
 
-            AddHashAdditional(ref hash);
+        //    AddHashAdditional(ref hash);
 
-            return hash.ToHashCode();
-        }
+        //    return hash.ToHashCode();
+        //}
 
         public static implicit operator Transaction(TransactionBase tx)
             => new(tx.Id, tx.From, tx.To, tx.Type);
@@ -99,6 +105,16 @@
 
         protected virtual bool EqualsAdditional(TransactionBase other) => true;
 
-        protected virtual void AddHashAdditional(ref HashCode hash) { }
+        protected virtual void AddHashAdditional(int hash) { }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        //public override string ToString()
+        //{
+        //    return base.ToString();
+        //}
     }
 }

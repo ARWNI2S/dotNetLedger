@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\dotNetLedger\dotNetLedger.csproj" />
+    <ProjectReference Include="..\dotNetLedger.Abstractions\dotNetLedger.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

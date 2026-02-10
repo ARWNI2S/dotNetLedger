@@ -24,7 +24,7 @@ namespace dotNetLedger.Solana.Transactions
             throw new NotImplementedException();
         }
 
-        public override ReadOnlyMemory<byte> TrySignTransaction(out bool isSigned)
+        public override byte[] TrySignTransaction(out bool isSigned)
         {
             throw new NotImplementedException();
         }

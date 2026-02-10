@@ -54,7 +54,7 @@ namespace dotNetLedger.Adapters
             throw new NotImplementedException();
         }
 
-        public virtual Task<LedgerPreflightResult> PreflightSignedTransactionAsync(ReadOnlyMemory<byte> signedTransaction, LedgerPreflightOptions? options = null, CancellationToken ct = default)
+        public virtual Task<LedgerPreflightResult> PreflightSignedTransactionAsync(byte[] signedTransaction, LedgerPreflightOptions? options = null, CancellationToken ct = default)
         {
             throw new NotImplementedException();
         }

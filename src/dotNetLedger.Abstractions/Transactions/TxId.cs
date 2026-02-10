@@ -1,7 +1,9 @@
 ﻿namespace dotNetLedger.Transactions
 {
-    public readonly record struct TxId(string Value)
+    public readonly struct TxId(string value)
     {
+        public string Value { get; } = value;
+
         public override string ToString() => Value;
     }
 }

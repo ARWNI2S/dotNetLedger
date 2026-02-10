@@ -23,10 +23,10 @@ namespace dotNetLedger.Solana.Adapters
         {
             var genesis = await rpc.GetGenesisHashAsync();
             return new LedgerNetworkInfo(
-                NetworkName: null,
-                ChainId: null,
-                GenesisId: genesis.Result,
-                Raw: genesis.RawRpcResponse);
+                networkName: null,
+                chainId: null,
+                genesisId: genesis.Result,
+                raw: genesis.RawRpcResponse);
         }
 
         public override async Task<LedgerSyncStatus> GetSyncStatusAsync(CancellationToken ct = default)
@@ -34,8 +34,8 @@ namespace dotNetLedger.Solana.Adapters
             // Solana no expone “syncing” explícito → health + slot progression
             var health = await rpc.GetHealthAsync();
             return new LedgerSyncStatus(
-                IsSynced: health.Result == "ok",
-                Raw: health.RawRpcResponse);
+                isSynced: health.Result == "ok",
+                raw: health.RawRpcResponse);
         }
 
         public override async Task<LedgerHead> GetHeadAsync(CancellationToken ct = default)
@@ -45,10 +45,10 @@ namespace dotNetLedger.Solana.Adapters
             var hash = await rpc.GetLatestBlockHashAsync();
 
             return new LedgerHead(
-                HeightLike: (long)height.Result,
-                SlotLike: (long)slot.Result,
-                HeadId: hash.Result?.Value?.Blockhash,
-                Raw: hash.RawRpcResponse);
+                heightLike: (long)height.Result,
+                slotLike: (long)slot.Result,
+                headId: hash.Result?.Value?.Blockhash,
+                raw: hash.RawRpcResponse);
         }
 
         public override async Task<LedgerBlock?> GetBlockAsync(LedgerBlockId id, LedgerBlockReadOptions? options = null, CancellationToken ct = default)
@@ -60,12 +60,12 @@ namespace dotNetLedger.Solana.Adapters
             if (!r.WasSuccessful || r.Result == null) return null;
 
             return new LedgerBlock(
-                CanonicalId: id,
-                Hash: r.Result.Blockhash,
-                NumberOrHeight: null,
-                Slot: bySlot.Slot,
-                Time: DateTimeOffset.FromUnixTimeSeconds(r.Result.BlockTime),
-                Raw: r.RawRpcResponse);
+                canonicalId: id,
+                hash: r.Result.Blockhash,
+                numberOrHeight: null,
+                slot: bySlot.Slot,
+                time: DateTimeOffset.FromUnixTimeSeconds(r.Result.BlockTime),
+                raw: r.RawRpcResponse);
         }
 
         public override async Task<LedgerTransaction?> GetTransactionAsync(LedgerTxId id, LedgerTxReadOptions? options = null, CancellationToken ct = default)
@@ -75,7 +75,7 @@ namespace dotNetLedger.Solana.Adapters
 
             return new LedgerTransaction(
                 id,
-                Raw: r.RawRpcResponse);
+                raw: r.RawRpcResponse);
         }
 
         public override async Task<LedgerTxStatus> GetTransactionStatusAsync(LedgerTxId id, CancellationToken ct = default)
@@ -84,10 +84,10 @@ namespace dotNetLedger.Solana.Adapters
             var s = r.Result?.Value?[0];
 
             return new LedgerTxStatus(
-                IsKnown: s != null,
-                IsFinal: s?.ConfirmationStatus == "finalized",
-                State: s?.ConfirmationStatus,
-                Raw: r.RawRpcResponse);
+                isKnown: s != null,
+                isFinal: s?.ConfirmationStatus == "finalized",
+                state: s?.ConfirmationStatus,
+                raw: r.RawRpcResponse);
         }
 
         public override async Task<LedgerBroadcastResult> BroadcastSignedTransactionAsync(
@@ -99,15 +99,15 @@ namespace dotNetLedger.Solana.Adapters
                 throw new InvalidOperationException("Transaction is not signed");
 
             var r = await rpc.SendTransactionAsync(
-                Convert.ToBase64String(signedTransaction.GetBytes().Span),
+                Convert.ToBase64String(signedTransaction.GetBytes()),
                 skipPreflight: options?.SkipPreflight ?? false,
                 preFlightCommitment: Commitment.Finalized);
 
             return new LedgerBroadcastResult(
-                Accepted: r.WasSuccessful,
-                TxId: r.WasSuccessful ? new LedgerTxId(r.Result) : null,
-                Error: r.ErrorData?.Error?.InstructionError?.BorshIoError,
-                Raw: r.RawRpcResponse);
+                accepted: r.WasSuccessful,
+                txId: r.WasSuccessful ? new LedgerTxId(r.Result) : null,
+                error: r.ErrorData?.Error?.InstructionError?.BorshIoError,
+                raw: r.RawRpcResponse);
         }
 
         public override async Task<LedgerFeeQuote> EstimateFeesAsync(LedgerFeeRequest request, CancellationToken ct = default)
@@ -115,26 +115,26 @@ namespace dotNetLedger.Solana.Adapters
             if (request.SignedTransaction is null)
                 return new LedgerFeeQuote(null, null);
 
-            var r = await rpc.GetFeeForMessageAsync(Convert.ToBase64String(request.SignedTransaction.Value.ToArray()));
-            return new LedgerFeeQuote("lamports", r.Result.Value, Raw: r.RawRpcResponse);
+            var r = await rpc.GetFeeForMessageAsync(Convert.ToBase64String(request.SignedTransaction));
+            return new LedgerFeeQuote("lamports", r.Result.Value, raw: r.RawRpcResponse);
         }
 
         public override async Task<LedgerPreflightResult> PreflightSignedTransactionAsync(
-            ReadOnlyMemory<byte> signedTransaction,
+            byte[] signedTransaction,
             LedgerPreflightOptions? options = null,
             CancellationToken ct = default)
         {
             var r = await rpc.SimulateTransactionAsync(signedTransaction.ToArray());
             return new LedgerPreflightResult(
-                WouldLikelySucceed: r.WasSuccessful && r.ErrorData == null,
-                Reason: r.ErrorData?.Error?.InstructionError?.BorshIoError,
-                Raw: r.RawRpcResponse);
+                wouldLikelySucceed: r.WasSuccessful && r.ErrorData == null,
+                reason: r.ErrorData?.Error?.InstructionError?.BorshIoError,
+                raw: r.RawRpcResponse);
         }
     }
 
     //public class SolanaLedgerAdapter : ILedgerCommonAdapter
     //{
-    //    public Task<LedgerBroadcastResult> BroadcastSignedTransactionAsync(ReadOnlyMemory<byte> signedTransaction, LedgerBroadcastOptions? options = null, CancellationToken ct = default)
+    //    public Task<LedgerBroadcastResult> BroadcastSignedTransactionAsync(byte[] signedTransaction, LedgerBroadcastOptions? options = null, CancellationToken ct = default)
     //    {
     //        throw new NotImplementedException();
     //    }
@@ -184,7 +184,7 @@ namespace dotNetLedger.Solana.Adapters
     //        throw new NotImplementedException();
     //    }
 
-    //    public Task<LedgerPreflightResult> PreflightSignedTransactionAsync(ReadOnlyMemory<byte> signedTransaction, LedgerPreflightOptions? options = null, CancellationToken ct = default)
+    //    public Task<LedgerPreflightResult> PreflightSignedTransactionAsync(byte[] signedTransaction, LedgerPreflightOptions? options = null, CancellationToken ct = default)
     //    {
     //        throw new NotImplementedException();
     //    }

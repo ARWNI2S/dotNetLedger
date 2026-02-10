@@ -1,0 +1,6 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <dNLCodegenEnabled Condition=" '$(dNLCodegenEnabled)'=='' ">true</dNLCodegenEnabled>
+    <dNLCodegenOutputDir>$(BaseIntermediateOutputPath)xsolgen</dNLCodegenOutputDir>
+  </PropertyGroup>
+</Project>

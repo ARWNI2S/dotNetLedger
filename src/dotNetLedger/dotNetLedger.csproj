@@ -7,7 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Adapters\LedgerRpcClient.cs" />
+    <Compile Remove="Capabilities\**" />
+    <Compile Remove="Configuration\**" />
+    <Compile Remove="Currency\**" />
+    <Compile Remove="Servicing\**" />
+    <Compile Remove="Tokenization\**" />
+    <Compile Remove="Transactions\**" />
+    <EmbeddedResource Remove="Capabilities\**" />
+    <EmbeddedResource Remove="Configuration\**" />
+    <EmbeddedResource Remove="Currency\**" />
+    <EmbeddedResource Remove="Servicing\**" />
+    <EmbeddedResource Remove="Tokenization\**" />
+    <EmbeddedResource Remove="Transactions\**" />
+    <None Remove="Capabilities\**" />
+    <None Remove="Configuration\**" />
+    <None Remove="Currency\**" />
+    <None Remove="Servicing\**" />
+    <None Remove="Tokenization\**" />
+    <None Remove="Transactions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="FinalityTarget.cs" />
     <Compile Remove="ILedgerExecutor.cs" />
     <Compile Remove="ILedgerOperation.cs" />
@@ -16,13 +36,6 @@
     <Compile Remove="LedgerBlockId.cs" />
     <Compile Remove="LedgerErrorCategory.cs" />
     <Compile Remove="LedgerValue.cs" />
-    <Compile Remove="Transactions\ITransactionStore.cs" />
-    <Compile Remove="Transactions\TransactionFactory.cs" />
-    <Compile Remove="Transactions\TransactionStore.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Adapters\ILedgerRpcApiAdapter.cs" />
   </ItemGroup>
 
 </Project>
