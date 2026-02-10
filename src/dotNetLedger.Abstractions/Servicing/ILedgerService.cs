@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace dotNetLedger.Servicing
+﻿namespace dotNetLedger.Servicing
 {
     public interface ILedgerService : IAddressable
     {

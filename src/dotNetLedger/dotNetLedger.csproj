@@ -38,4 +38,10 @@
     <Compile Remove="LedgerValue.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\dotNetLedger.Abstractions\dotNetLedger.Abstractions.csproj" />
+    <ProjectReference Include="..\dotNetLedger.Analyzers\dotNetLedger.Analyzers.csproj" />
+    <ProjectReference Include="..\dotNetLedger.CodeGenerator\dotNetLedger.CodeGenerator.csproj" />
+  </ItemGroup>
+
 </Project>

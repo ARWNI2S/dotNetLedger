@@ -10,9 +10,9 @@
         Address Address { get; }
     }
 
-    public interface IRouted
-    {
-        string? Route { get; }
-    }
+    //public interface IRouted
+    //{
+    //    string? Route { get; }
+    //}
 
 }
