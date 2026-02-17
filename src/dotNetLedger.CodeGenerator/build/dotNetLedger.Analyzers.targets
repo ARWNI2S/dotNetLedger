@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <UsingTask TaskName="dotNetLedger.AnchorIdlCodeGen"
+  <!--<UsingTask TaskName="dotNetLedger.AnchorIdlCodeGen"
              AssemblyFile="$(MSBuildThisFileDirectory)..\lib\netstandard2.0\dotNetLedger.Analyzers.dll" />
 
   <ItemGroup Condition="'$(dotNetLedgerAnalyzersEnabled)' == 'true'">
@@ -22,17 +22,17 @@
       <GeneratedFiles Include="$(dNLCodegenOutputDir)\**\*.g.cs" />
     </ItemGroup>
 
-    <!-- Explicitly add generated files to compilation -->
+    --><!-- Explicitly add generated files to compilation --><!--
     <ItemGroup>
       <Compile Include="@(GeneratedFiles)"
                Visible="false"
                AutoGen="true"
                DesignTime="true"
                DependentUpon="%(Filename)" />
-      <!-- Ensure proper cleaning -->
+      --><!-- Ensure proper cleaning --><!--
       <FileWrites Include="@(GeneratedFiles)" />
     </ItemGroup>
 
-  </Target>
+  </Target>-->
 
 </Project>

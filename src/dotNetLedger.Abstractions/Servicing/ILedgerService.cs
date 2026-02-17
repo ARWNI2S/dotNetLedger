@@ -2,5 +2,6 @@
 {
     public interface ILedgerService : IAddressable
     {
+
     }
 }

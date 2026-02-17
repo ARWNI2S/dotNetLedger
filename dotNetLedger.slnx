@@ -14,6 +14,7 @@
   <Project Path="src/dotNetLedger.CodeGenerator/dotNetLedger.CodeGenerator.csproj" Id="62f19657-3482-4a75-96d7-ecccd331157f" />
   <Project Path="src/dotNetLedger.Database/dotNetLedger.Database.csproj" />
   <Project Path="src/dotNetLedger.Ethereum/dotNetLedger.Ethereum.csproj" />
+  <Project Path="src/dotNetLedger.Solana.CodeGenerator/dotNetLedger.Solana.CodeGenerator.csproj" Id="4e9b5b3e-2b2c-46e1-b9b5-d44b49d96fe9" />
   <Project Path="src/dotNetLedger.Solana/dotNetLedger.Solana.csproj" />
   <Project Path="src/dotNetLedger/dotNetLedger.csproj" />
 </Solution>

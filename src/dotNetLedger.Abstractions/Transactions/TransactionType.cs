@@ -4,6 +4,7 @@
     {
         Transfer,
         Call,
-        Push
+        Push,
+        Pull
     }
 }
